@@ -1,0 +1,35 @@
+td {
+    vertical-align: top;
+}
+#table1, #table2, #table3{
+    display: none;
+}
+.buttonClassB {
+    background: black;
+}
+/* Style the buttons */
+.btn {
+    border: none;
+    outline: none;
+    padding: 10px 16px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Style the active class (and buttons on mouse-over) */
+.active, .btn:hover {
+    background-color: #666;
+    color: white;
+}
+
+.button {
+    display: block;
+    width: 260px;
+    height: 40px;
+    background: #4E9CAF;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}

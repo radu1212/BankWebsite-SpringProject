@@ -1,0 +1,18 @@
+Simin Radu :
+
+Done :  5     	 - documentatie, scripts, operatii casier, login
+		5.5   	 - login ambele, register, creare cont, generare iban
+		6     	 - vizualizare detailed si overview
+		6.5   	 - resetare parola + account blocked
+		7     	 - Factory DP 
+		7.25  	 - BCrypt
+		8     	 - Strategy DP la export
+		8.25  	 - Builder DP la user
+		8.75  	 - Vizualizare tranzactii
+		9.5      - Plata facturi
+		10 + .25 - Spring Security
+		10 + .5	 - Log + JavaDoc
+		
+Lipsesc : 0.25 	 - Teste
+
+Nota : 10 hopefully

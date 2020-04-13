@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/tables.css"/>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="js/tables.js"></script>
+<style>
+    body, h1, h2, h3, h4, h5, h6 {
+        font-family: "Raleway", sans-serif
+    }
+</style>
+<body class="w3-light-grey w3-content" style="max-width:1600px">
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+    <div class="w3-container">
+        <a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey"
+           title="close menu">
+            <i class="fa fa-remove"></i>
+        </a>
+        <h4 th:text="${username}"></h4>
+        <p class="w3-text-grey">Welcome back!</p>
+    </div>
+    <div class="w3-bar-block">
+        <a href="#portfolio" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i
+                class="fa fa-th-large fa-fw w3-margin-right"></i>View users</a>
+        <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i
+                class="fa fa-user fa-fw w3-margin-right"></i>View companies</a>
+        <a href="#pay" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i
+                class="fa fa-envelope fa-fw w3-margin-right"></i>Add company</a>
+        <a href="/app/login" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i
+                class="fa fa-user fa-fw w3-margin-right"></i>Logout</a>
+    </div>
+    <div class="w3-panel w3-large">
+        <i class="fa fa-facebook-official w3-hover-opacity"></i>
+        <i class="fa fa-instagram w3-hover-opacity"></i>
+        <i class="fa fa-snapchat w3-hover-opacity"></i>
+        <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+        <i class="fa fa-twitter w3-hover-opacity"></i>
+        <i class="fa fa-linkedin w3-hover-opacity"></i>
+    </div>
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
+     title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px">
+    <header id="portfolio">
+        <div class="w3-container w3-padding-large" style="margin-bottom:32px">
+            <h4><b>All the users:</b></h4>
+            <table class="w3-table-all w3-large">
+                <tr th:if="${users.empty}">
+                    <td colspan="2"> No Users Available</td>
+                </tr>
+                <tr th:if="${users != null and !users.empty}">
+                    <th>Username</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Email</th>
+                    <th>No. of accounts</th>
+                    <th>No. of bills</th>
+                </tr>
+                <tr th:if="${users != null and !users.empty}" th:each="user : ${users}">
+                    <td><a th:href="@{/users/{usern}(usern = ${user.username})}"><span
+                            th:text="${user.username}">Username</span></a></td>
+                    <td><span th:text="${user.lastname}"> Last name </span></td>
+                    <td><span th:text="${user.firstname}"> First name </span></td>
+                    <td><span th:text="${user.email}"> Email </span></td>
+                    <td><span th:text="${user.no_of_accounts}"> No.of accounts </span></td>
+                    <td><span th:text="${user.no_of_bills}"> No. of bills </span></td>
+
+                </tr>
+            </table>
+        </div>
+    </header>
+    <header id="about">
+        <br>
+        <div class="w3-container w3-padding-large" style="margin-bottom:32px">
+
+            <h4><b>All the companies:</b></h4>
+            <table class="w3-table-all w3-large">
+                <tr th:if="${companies.empty}">
+                    <td colspan="2"> No Companies Available</td>
+                </tr>
+                <tr th:if="${companies != null and !companies.empty}">
+                    <th>Company name</th>
+                    <th>Accepted currency</th>
+                </tr>
+                <tr th:if="${companies != null and !companies.empty}" th:each="company : ${companies}">
+                    <td><span th:text="${company.name}"> Company name </span></td>
+                    <td><span th:text="${company.accepted_currency}"> Accepted currency </span></td>
+                </tr>
+            </table>
+        </div>
+    </header>
+
+    <header id="pay">
+        <br><br>
+        <div class="w3-container w3-padding-large" style="margin-bottom:32px">
+            <form name="myForm" id="register-form" role="form" onsubmit="return checkInp()" autocomplete="off"
+                  class="form" method="post"
+                  th:object="${addCompanyForm}">
+                <div>
+                    <h2>Add new company form: </h2>
+                    <br>
+                    <label>Company name:</label>
+                    <label>
+                        <input class="w3-input w3-border w3-round" type="text" th:field="*{name}"
+                               name="value"
+                               placeholder="Enter the name of the company">
+                    </label>
+                    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
+                    <br>
+                    <label>
+                        Company`s accepted currency:
+                        <select th:field="*{accepted_currency}">
+                            <option th:value="'EUR'">EUR</option>
+                            <option th:value="'USD'">USD</option>
+                            <option th:value="'RON'">RON</option>
+                            <option th:value="'FRT'">FRT</option>
+                        </select>
+                    </label>
+                </div>
+
+                <span th:if="${logError == 'logError'}"><br>Name can`t be empty</span>
+
+                <div class="container-login100-form-btn">
+                    <p>
+                        <button class="w3-button w3-dark-grey w3-padding-large w3-margin-top w3-margin-bottom">
+                            Add new company!
+                        </button>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </header>
+</div>
+
+<script>
+    // Script to open and close sidebar
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+    }
+
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+    }
+</script>
+
+</body>
+</html>

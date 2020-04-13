@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/tables.css"/>
+<link rel="stylesheet" type="text/css" href="css/my-date.css"/>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="js/tables.js"></script>
+<style>
+    body, h1, h2, h3, h4, h5, h6 {
+        font-family: "Raleway", sans-serif
+    }
+</style>
+<body class="w3-light-grey w3-content" style="max-width:1600px">
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+    <div class="w3-container">
+        <a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey"
+           title="close menu">
+            <i class="fa fa-remove"></i>
+        </a>
+        <h4 th:text="${username}"></h4>
+        <p class="w3-text-grey">Welcome back!</p>
+    </div>
+    <div class="w3-bar-block">
+        <a href="/app/index#portfolio" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i
+                class="fa fa-th-large fa-fw w3-margin-right"></i>View accounts</a>
+        <a href="/app/index#about" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i
+                class="fa fa-user fa-fw w3-margin-right"></i>Add account</a>
+        <a href="/app/index#pay" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i
+                class="fa fa-envelope fa-fw w3-margin-right"></i>Pay bills</a>
+        <a href="/app/login" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i
+                class="fa fa-user fa-fw w3-margin-right"></i>Logout</a>
+    </div>
+    <div class="w3-panel w3-large">
+        <i class="fa fa-facebook-official w3-hover-opacity"></i>
+        <i class="fa fa-instagram w3-hover-opacity"></i>
+        <i class="fa fa-snapchat w3-hover-opacity"></i>
+        <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+        <i class="fa fa-twitter w3-hover-opacity"></i>
+        <i class="fa fa-linkedin w3-hover-opacity"></i>
+    </div>
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
+     title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px">
+    <form name="myForm" id="register-form" role="form" onsubmit="return checkInp()" autocomplete="off"
+          class="form" method="post"
+          th:object="${viewTransactionsForm}"
+    >
+        <div class="w3-container w3-padding-large">
+            <h1>On this page you can check out all of your past transactions</h1>
+            <br><br>
+            <h2>Please select the interval within which you wish to view your transactions</h2>
+            <br><br>
+            <div>
+                <label for="start">Start date:</label>
+                <input type="date" name="start" id="start" th:field="*{from}">
+
+                <label for="end">Until:</label>
+                <input type="date" name="end" id="end" th:field="*{to}">
+
+                <label for="choice">Select the format in which you would like to export the transactions</label>
+                <select name="choice" id="choice" th:field="*{export_choice}">
+                    <option th:value="'CSV'">CSV</option>
+                    <option th:value="'PDF'">PDF</option>
+                </select>
+            </div>
+            <div class="container-login100-form-btn">
+                <p>
+                    <button class="w3-button w3-dark-grey w3-padding-large w3-margin-top w3-margin-bottom">
+                        View!
+                    </button>
+                </p>
+            </div>
+            <h1 th:if="${eroare == 'gol'}">Date selections cannot remain empty!</h1>
+            <h1 th:if="${none == 'none'}"> There are no transactions available in that time interval</h1>
+            <h1 th:if="${invers == 'true'}"> Start date cannot be after end date</h1>
+            <h4 th:if="${transactions != null and transactions.size()>0 and start == false}"><b>Your transactions in the selected interval</b></h4>
+            <table class="w3-table-all w3-large">
+                <tr th:if="${transactions.size() == 0 and start == false}">
+                    <td colspan="2"> No transactions were made in that interval</td>
+                </tr>
+                <tr th:if="${transactions != null and transactions.size()>0}">
+                    <th>Type</th>
+                    <th>Recipient</th>
+                    <th>Value</th>
+                    <th>Date</th>
+                </tr>
+                <tr th:if="${transactions != null and transactions.size()>0}"
+                    th:each="transaction : ${transactions}">
+                    <td><span th:text="${transaction.type}"> Type </span></td>
+                    <td><span th:text="${transaction.recipient}"> Recipient </span></td>
+                    <td><span th:text="${transaction.value}"> Value </span></td>
+                    <td><span th:text="${transaction.date}"></span></td>
+                </tr>
+            </table>
+
+        </div>
+    </form>
+</div>
+
+<script>
+    // Script to open and close sidebar
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+    }
+
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+    }
+</script>
+
+</body>
+</html>

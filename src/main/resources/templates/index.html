@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="css/tables.css"/>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="js/tables.js"></script>
+<style>
+    body, h1, h2, h3, h4, h5, h6 {
+        font-family: "Raleway", sans-serif
+    }
+</style>
+<body class="w3-light-grey w3-content" style="max-width:1600px">
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+    <div class="w3-container">
+        <a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey"
+           title="close menu">
+            <i class="fa fa-remove"></i>
+        </a>
+        <h4 th:text="${username}"></h4>
+        <p class="w3-text-grey">Welcome back!</p>
+    </div>
+    <div class="w3-bar-block">
+        <a href="#portfolio" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i
+                class="fa fa-th-large fa-fw w3-margin-right"></i>View accounts</a>
+        <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i
+                class="fa fa-user fa-fw w3-margin-right"></i>Add account</a>
+        <a href="#pay" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i
+                class="fa fa-envelope fa-fw w3-margin-right"></i>Pay bills</a>
+        <a href="/app/login" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i
+                class="fa fa-user fa-fw w3-margin-right"></i>Logout</a>
+    </div>
+    <div class="w3-panel w3-large">
+        <i class="fa fa-facebook-official w3-hover-opacity"></i>
+        <i class="fa fa-instagram w3-hover-opacity"></i>
+        <i class="fa fa-snapchat w3-hover-opacity"></i>
+        <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+        <i class="fa fa-twitter w3-hover-opacity"></i>
+        <i class="fa fa-linkedin w3-hover-opacity"></i>
+    </div>
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
+     title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px">
+
+    <!-- Header -->
+    <header id="portfolio">
+
+        <div class="w3-container w3-padding-large" style="margin-bottom:32px">
+            <h2 th:if="${error == 'too many accounts'}">
+                <b> Could not create account! You already have 2 accounts like the one requested!</b>
+            </h2>
+            <h2 th:if="${error == 'success'}">
+                <b> Your account was created successfully. Check it out down below!</b>
+            </h2>
+        </div>
+
+        <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()"><i
+                class="fa fa-bars"></i></span>
+        <div class="w3-container">
+            <h1><b>My accounts:</b></h1>
+            <div class="w3-section w3-bottombar w3-padding-16">
+                <span class="w3-margin-right">Filter:</span>
+                <button id="btn-all" class="w3-button w3-white">
+                    <a onclick='show(1);'>All</a>
+                </button>
+                <button id="btn-saving" class="w3-button w3-white">
+                    <a onclick='show(2);'>Saving</a>
+                </button>
+                <button id="btn-spending" class="w3-button w3-white">
+                    <a onclick='show(3);'>Spending</a>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <form id="register-form" role="form" autocomplete="off" class="form" method="post">
+        <div class="w3-container w3-padding-large" style="margin-bottom:32px">
+            <div id="table1">
+                <h4><b>All your accounts:</b></h4>
+                <table class="w3-table-all w3-large">
+                    <tr th:if="${bankAccounts.empty}">
+                        <td colspan="2"> No Accounts Available</td>
+                    </tr>
+                    <tr th:if="${bankAccounts != null and !bankAccounts.empty}">
+                        <th>Iban</th>
+                        <th>Type</th>
+                        <th>Sold</th>
+                        <th>Currency</th>
+                    </tr>
+                    <tr th:if="${bankAccounts != null and !bankAccounts.empty}" th:each="bankAccount : ${bankAccounts}">
+                        <td><a th:href="@{/details/{iban}(iban = ${bankAccount.iban})}"><span
+                                th:text="${bankAccount.iban}">Iban</span></a></td>
+                        <td><span th:text="${bankAccount.type}"> Type </span></td>
+                        <td><span th:text="${bankAccount.sold}"> Sold </span></td>
+                        <td><span th:text="${bankAccount.currency}"> Currency </span></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="table2">
+                <h4><b>Your saving accounts:</b></h4>
+                <table class="w3-table-all w3-large">
+                    <tr th:if="${savingAccounts.empty}">
+                        <td colspan="2"> No Accounts Available</td>
+                    </tr>
+                    <tr th:if="${savingAccounts != null and !savingAccounts.empty}">
+                        <th>Iban</th>
+                        <th>Sold</th>
+                        <th>Currency</th>
+                    </tr>
+                    <tr th:if="${savingAccounts != null and !savingAccounts.empty}"
+                        th:each="savingAccount : ${savingAccounts}">
+                        <td><a th:href="@{/details/{iban}(iban = ${savingAccount.iban})}"><span
+                                th:text="${savingAccount.iban}"> Iban </span></a></td>
+                        <td><span th:text="${savingAccount.sold}"> Sold </span></td>
+                        <td><span th:text="${savingAccount.currency}"> Currency </span></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="table3">
+                <h4><b>Your spending accounts:</b></h4>
+                <table class="w3-table-all w3-large">
+                    <tr th:if="${spendingAccounts.empty}">
+                        <td colspan="2"> No Accounts Available</td>
+                    </tr>
+                    <tr th:if="${spendingAccounts != null and !spendingAccounts.empty}">
+                        <th>Iban</th>
+                        <th>Sold</th>
+                        <th>Currency</th>
+                    </tr>
+                    <tr th:if="${spendingAccounts != null and !spendingAccounts.empty}"
+                        th:each="spendingAccount : ${spendingAccounts}">
+                        <td><a th:href="@{/details/{iban}(iban = ${spendingAccount.iban})}"><span
+                                th:text="${spendingAccount.iban}"> Iban </span></a></td>
+                        <td><span th:text="${spendingAccount.sold}"> Sold </span></td>
+                        <td><span th:text="${spendingAccount.currency}"> Currency </span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <h4 class="w3-center">What are the interest rates of different account?</h4>
+        <!-- Pricing Tables -->
+        <div class="w3-row-padding" style="margin:0 -16px">
+            <div class="w3-quarter w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xlarge w3-padding-32">Saving account - Euro</li>
+                    <li class="w3-padding-16">Your funds are still readily available</li>
+                    <li class="w3-padding-16">Your money is kept safe.</li>
+                    <li class="w3-padding-16">You receive security.</li>
+                    <li class="w3-padding-16">Mail support.</li>
+                    <li class="w3-padding-16">
+                        <h2>8%</h2>
+                        <span class="w3-opacity">Interest Rate</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <a href="#about" class="button">
+                            Sign Up
+                        </a></li>
+                </ul>
+            </div>
+
+            <div class="w3-quarter w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xlarge w3-padding-32">Saving account - USD</li>
+                    <li class="w3-padding-16">Your funds are still readily available</li>
+                    <li class="w3-padding-16">Your money is kept safe.</li>
+                    <li class="w3-padding-16">You receive security.</li>
+                    <li class="w3-padding-16">Mail support.</li>
+                    <li class="w3-padding-16">
+                        <h2>10%</h2>
+                        <span class="w3-opacity">Interest Rate</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <a href="#about" class="button">
+                            Sign Up
+                        </a></li>
+                </ul>
+            </div>
+
+            <div class="w3-quarter w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xlarge w3-padding-32">Saving account - RON</li>
+                    <li class="w3-padding-16">Your funds are still readily available</li>
+                    <li class="w3-padding-16">Your money is kept safe.</li>
+                    <li class="w3-padding-16">You receive security.</li>
+                    <li class="w3-padding-16">Mail support.</li>
+                    <li class="w3-padding-16">
+                        <h2>6%</h2>
+                        <span class="w3-opacity">Interest Rate</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <a href="#about" class="button">
+                            Sign Up
+                        </a></li>
+                </ul>
+            </div>
+
+            <div class="w3-quarter w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xlarge w3-padding-32">Saving account - FRT</li>
+                    <li class="w3-padding-16">Your funds are still readily available</li>
+                    <li class="w3-padding-16">Your money is kept safe.</li>
+                    <li class="w3-padding-16">You receive security.</li>
+                    <li class="w3-padding-16">Mail support.</li>
+                    <li class="w3-padding-16">
+                        <h2>5%</h2>
+                        <span class="w3-opacity">Interest Rate</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <a href="#about" class="button">
+                            Sign Up
+                        </a></li>
+                </ul>
+            </div>
+        </div>
+
+        <h4 class="w3-center">What are our poundage rates for spending accounts?</h4>
+        <!-- Pricing Tables -->
+        <div class="w3-row-padding" style="margin:0 -16px">
+            <div class="w3-quarter w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xlarge w3-padding-32">Spending account - Euro</li>
+                    <li class="w3-padding-16">Immediate access to funds</li>
+                    <li class="w3-padding-16">Direct Deposit</li>
+                    <li class="w3-padding-16">Tax Efficiency</li>
+                    <li class="w3-padding-16">Mail support</li>
+                    <li class="w3-padding-16">
+                        <h2>12%</h2>
+                        <span class="w3-opacity">Poundage rate</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <a href="#about" class="button">
+                            Sign Up
+                        </a></li>
+                </ul>
+            </div>
+
+            <div class="w3-quarter w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xlarge w3-padding-32">Spending account - USD</li>
+                    <li class="w3-padding-16">Immediate access to funds</li>
+                    <li class="w3-padding-16">Direct Deposit</li>
+                    <li class="w3-padding-16">Tax Efficiency</li>
+                    <li class="w3-padding-16">Mail support</li>
+                    <li class="w3-padding-16">
+                        <h2>10%</h2>
+                        <span class="w3-opacity">Poundage rate</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <a href="#about" class="button">
+                            Sign Up
+                        </a></li>
+                </ul>
+            </div>
+
+            <div class="w3-quarter w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xlarge w3-padding-32">Spending account - RON</li>
+                    <li class="w3-padding-16">Immediate access to funds</li>
+                    <li class="w3-padding-16">Direct Deposit</li>
+                    <li class="w3-padding-16">Tax Efficiency</li>
+                    <li class="w3-padding-16">Mail support</li>
+                    <li class="w3-padding-16">
+                        <h2>9%</h2>
+                        <span class="w3-opacity">Poundage rate</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <a href="#about" class="button">
+                            Sign Up
+                        </a></li>
+                </ul>
+            </div>
+
+            <div class="w3-quarter w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xlarge w3-padding-32">Spending account - FRT</li>
+                    <li class="w3-padding-16">Immediate access to funds</li>
+                    <li class="w3-padding-16">Direct Deposit</li>
+                    <li class="w3-padding-16">Tax Efficiency</li>
+                    <li class="w3-padding-16">Mail support</li>
+                    <li class="w3-padding-16">
+                        <h2>15%</h2>
+                        <span class="w3-opacity">Poundage rate</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <a href="#about" class="button">
+                            Sign Up
+                        </a></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <header id="about">
+            <div class="w3-container w3-padding-large" style="margin-bottom:32px">
+                <h4><b>Add an account!</b></h4>
+                <p>Here you will have to provide details regarding the new account you wish to open:</p>
+                <hr>
+                <h4>Account details:</h4>
+                <!-- Progress bars / Skills -->
+                <form class="login100-form validate-form" action="#portfolio" th:action="@{/index#porfolio}"
+                      th:object="${createAccountForm}"
+                      method="POST">
+                    <p>Currency:</p>
+                    <div>
+                        <select th:field="*{currency}">
+                            <option th:value="'EUR'">EUR</option>
+                            <option th:value="'USD'">USD</option>
+                            <option th:value="'RON'">RON</option>
+                            <option th:value="'FRT'">FRT</option>
+                        </select>
+                    </div>
+                    <p>Type</p>
+                    <div>
+                        <select th:field="*{type}">
+                            <option th:value="'Spending'">Spending</option>
+                            <option th:value="'Saving'">Saving</option>
+                        </select></div>
+                    <p>
+                        <button class="w3-button w3-dark-grey w3-padding-large w3-margin-top w3-margin-bottom">
+                            <i class="fa fa-download w3-margin-right"></i>Create account!
+                        </button>
+                    </p>
+                    <hr>
+                </form>
+            </div>
+        </header>
+    </form>
+
+    <header id="pay">
+        <div class="w3-container w3-padding-large">
+
+            <h2><b>Pay your bills!</b></h2>
+
+            <h3>1. Bill Pay is Convenient</h3>
+            <h4>Making online payments through your financial institution, makes it convenient to pay all your bills
+                from a central location. You do not have to log into several websites and remember multiple passwords.
+                Many providers also include an option to pre-schedule payments on their due date or another day of your
+                choosing. Whether you receive your bills electronically or by mail, you can utilize online banking to
+                schedule payments. After scheduling a payment, the banking institution will either pay those companies
+                electronically or send them a paper check.</h4>
+
+            <h3>2. Bill Pay is Secure</h3>
+            <h4>Financial institutions now use the best security protocols to help keep your transactions secure.
+                Several methods are incorporated into bill pay services to keep your information safe, including:
+                usernames and passwords, security layers that help in preventing outsiders from attacking, encryption
+                processes that keeps your data hidden during electronic transit, and automatic sign off if your online
+                session is idle for too long</h4>
+
+            <h3>3. Bill Pay Simplifies Money Management</h3>
+            <h4>When you make use of electronic bill pay, at a glance, you can check account balances and determine
+                whether your bill payment has been scheduled and paid. Other benefits include: searching specific
+                payments online, accessing online payment history, setting up email alerts that keep you posted about
+                scheduled payments.</h4>
+
+            <h3>4. Bill Pay is Ecological</h3>
+            <h4>One of the biggest benefits of paying bills online is eliminating paper waste. Paying your bills online
+                will reduce paper checks being mailed. In addition to eliminating paper waste, it also eliminates the
+                costs of postage and envelopes.</h4>
+
+            <h3>5. Bill Pay Lets you Consolidate Your Finances</h3>
+            <h4>Using an online bill pay service allows you to consolidate your bills in one place. Your bills are
+                collected and emailed to you and then posted to your account. From there, they can be automatically paid
+                from your account on the dates you specify.</h4>
+
+            <h3>6. Bill Pay Keeps you Organized</h3>
+            <h4>It is certainly possible to lose focus on your finances, but electronic bill payments help you organize
+                your records. With all your bills and payments organized in one single place, you can easily tell if
+                something is posted incorrectly, or if you missed a payment completely. </h4>
+
+            <h3>7. Bill Pay Saves you Time</h3>
+            <h4>Once you have the electronic bill payment service setup in online or mobile banking, it takes just
+                minutes to pay your bills.</h4>
+            <br>
+            <br>
+            <h2>Take a look at your pending bills and select the one you wish to pay:</h2>
+
+
+            <table class="w3-table-all w3-large">
+                <tr th:if="${bills.empty}">
+                    <td colspan="2"> No Bills Available</td>
+                </tr>
+                <tr th:if="${bills != null and !bills.empty}">
+                    <th>Description</th>
+                    <th>Recipient</th>
+                    <th>Value</th>
+                    <th>Currency Accepted</th>
+                </tr>
+                <tr th:if="${bills != null and !bills.empty}" th:each="bil : ${bills}">
+                    <td><a th:href="@{/pay-bills/{id}(id = ${bil.id})}"><span
+                            th:text="${bil.description}">Iban</span></a>
+                    </td>
+                    <td><span th:text="${bil.recipient}"> Type </span></td>
+                    <td><span th:text="${bil.value}"> Sold </span></td>
+                    <td><span th:text="${bil.accepted_currency}"> Currency </span></td>
+                </tr>
+            </table>
+        </div>
+    </header>
+    <!-- End page content -->
+</div>
+
+<script>
+    // Script to open and close sidebar
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+    }
+
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+    }
+</script>
+
+</body>
+</html>
